@@ -25,4 +25,9 @@ export class BookmarkController {
   async updateBookmark(@GetUser() user, bookmarkDto: BookmarkDto) {
     return await this.bookmarkService.updateBookmark(bookmarkDto, user.id);
   }
+
+  @Get('all')
+  async getAllBookmarks() {
+    return await this.bookmarkService.getAllBookmarks();
+  } 
 }

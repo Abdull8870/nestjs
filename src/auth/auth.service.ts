@@ -57,4 +57,18 @@ export class AuthService {
       accessToken: token,
     };
   }
+
+  async getUser(id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        bookmarks: true,
+      },
+    });
+
+    delete user.password;
+    return user;
+  }
 }
