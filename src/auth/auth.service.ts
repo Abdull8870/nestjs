@@ -59,6 +59,7 @@ export class AuthService {
   }
 
   async getUser(id: number) {
+    console.log('Inside service');
     const user = await this.prisma.user.findUnique({
       where: {
         id: id,
