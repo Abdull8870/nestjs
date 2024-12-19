@@ -1,13 +1,10 @@
-import {
-  CACHE_MANAGER,
-  CacheInterceptor,
-  CacheTTL,
-} from '@nestjs/cache-manager';
+import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
 import {
   Controller,
   Get,
   Inject,
   Req,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,11 +13,10 @@ import { AuthService } from 'src/auth/auth.service';
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { Cache } from 'cache-manager';
-import { combineLatest } from 'rxjs';
-import { Client } from '@nestjs/microservices/external/nats-client.interface';
 import { ClientProxy } from '@nestjs/microservices';
-import e from 'express';
+import { HttpExceptionFilter } from 'src/exception/exception.filter';
 
+@UseFilters(HttpExceptionFilter)
 @UseInterceptors(CacheInterceptor)
 @UseGuards(JwtGuard)
 @Controller('users')

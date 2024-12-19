@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
@@ -26,19 +26,17 @@ export class AuthService {
 
   async login(authDto: AuthDto) {
     const user = await this.prisma.user.findUnique({
-      where: {
-        email: authDto.email,
-      },
+      where: { email: authDto.email },
     });
 
-    const isPasswordCorrect = await argon.verify(
-      user.password,
-      authDto.password,
-    );
+    if (!user || !(await argon.verify(user.password, authDto.password))) {
+      throw new HttpException(
+        'Invalid email or password',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
 
-    return isPasswordCorrect
-      ? await this.jwtSign(user.id, user.email)
-      : { message: 'Invalid email or password' };
+    return this.jwtSign(user.id, user.email);
   }
 
   async jwtSign(userId: number, email: string) {
