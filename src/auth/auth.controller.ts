@@ -1,6 +1,9 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseFilters } from '@nestjs/common';
 import { AuthDto, UserDto } from './dto';
 import { AuthService } from './auth.service';
+import { HttpExceptionFilter } from 'src/exception/exception.filter';
+
+@UseFilters(HttpExceptionFilter)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
